@@ -1,6 +1,8 @@
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
 
 
 #Step1
@@ -38,9 +40,23 @@ preprocessor = ColumnTransformer( transformers=[
     ("num", "passthrough", numeric_features)
 ]
 )
-print(preprocessor)
 #Apply encoding to features
 X_processed = preprocessor.fit_transform(X)
 print("\nEncoded feature matrix shape:", X_processed.shape)
 
-#step 3
+#step 3 Train/Test Split
+
+#Separate data used for learning from data used for evaluation: data separation
+X_train, X_test, y_train, y_test = train_test_split(X_processed, y, test_size=0.2, random_state=42)
+print("\nTraining set shape:", X_train.shape)
+print("Test set shape:", X_test.shape)
+print("Training labels shape:", y_train.shape)
+print("Test labels shape:", y_test.shape)
+
+#Step 4 Model Training
+
+#Initialize the Logistic Regression model
+model = LogisticRegression(max_iter=1000)
+#Train the model
+model.fit(X_train, y_train)
+print("\nModel training completed.")
