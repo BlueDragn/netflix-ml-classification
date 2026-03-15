@@ -24,7 +24,7 @@ What will be done next?
 
 ---
 
-## 11-03-2026
+## 14-03-2026
 **Topic :**  
 - Start of Project 2 revision
 
@@ -52,6 +52,30 @@ What will be done next?
 
   ---
 
+## 15-03-2026
 
+**Topic**
+- Revise the ML pipeline
 
+**What I did**
+- Inspected the dataset, discussed why it is important to verify data before transforming.
+-  discussed the feature  and final feature set, dived deep into feature engineering.
+- Introduced feature engineering ideas (`duration_number`, `duration_type`, `genre_count`)
+- discussed concepts like overfiting,underfiting,generalization.
 
+Restructured the projects:
+- Renamed `train_model.py` -> `train_movdel_v1.py` (baseline pipeline).
+- Created `train_model_v2.py` for improvements.
+- Created `docs/` folder with `engineering_log.md` and `engineering.notes.md`
+
+**Why**
+- To Preserve the original guided implementation as a baseline while creating a separate version for improvements and experiment.
+
+**Observation**  
+- The existing pipeline already demonstrates key ML workflow components including dataset inspection, preprocessing with `ColumnTransformer`, categorical encoding using `OneHotEncoder`, train/test split, Logistic Regression training, and evaluation metrics.
+
+**Concepts Discussed**  
+- Supervised learning, classification, target variable definition, feature selection vs feature engineering, dataset shortcuts, train/test split, generalization, and overfitting.
+
+**Next Step**  
+- Start development of `train_model_v2.py` and implement feature engineering (`duration_number`, `duration_type`, `genre_count`). Plan Experiment 1 to compare model performance with and without the duration feature.
