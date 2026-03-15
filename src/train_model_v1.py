@@ -1,3 +1,8 @@
+'''
+V1-Baseline ML pipeline
+Focus: understanding ML workflow
+
+'''
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
@@ -10,8 +15,11 @@ from sklearn.metrics import classification_report, accuracy_score, confusion_mat
 #Load cleaned data from project 1
 df = pd.read_csv("data/processes/cleaned_data.csv")
 print("Data loaded successfully.")
+#Verify dataset after cleaning
 print("shape:", df.shape)
 print(df.head())
+print(df.columns)
+df.info()
 
 # Define target variable and features
 y = df["type"]
