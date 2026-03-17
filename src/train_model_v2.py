@@ -9,6 +9,10 @@ import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+
 
 # Step 2: Load the dataset
 df = pd.read_csv("data/processes/cleaned_data.csv")
@@ -16,8 +20,8 @@ print("Data loaded successfully.")
 
 #General dataset exploration
 print(df.head(10)) # Display the first 10 rows of the dataset to understand its structure and content.
-print(df.shape) # Check the shape of the dataset to understand how many samples and features it contains.
-print(df.columns) # List the column names to identify the features and target variable.
+print("\nShape",df.shape) # Check the shape of the dataset to understand how many samples and features it contains.
+print("\nColumns: ", df.columns) # List the column names to identify the features and target variable.
 df.info()# Get a summary of the dataset, including data types and non-null counts.
 print(df.dtypes) # Check the data types of each column to identify which features are numerical and which are categorical.
 
@@ -26,8 +30,8 @@ print(df.describe()) # Get statistical summaries of the numerical features to un
 print(df.describe(include = "all")) # Get summaries of all columns, including categorical ones
 
 #Data quality checks
-print(df.isnull().sum()) # Check for missing values in each column to identify if any data cleaning is needed before feature engineering.
-print("Duplicate rows: ", df.duplicated().sum()) # Check for duplicate rows in the dataset to ensure data quality before proceeding with feature engineering.
+print("\nSum_of_Null",df.isnull().sum()) # Check for missing values in each column to identify if any data cleaning is needed before feature engineering.
+print("\nDuplicate rows: ", df.duplicated().sum()) # Check for duplicate rows in the dataset to ensure data quality before proceeding with feature engineering.
 
 
 # ===================================
@@ -70,10 +74,22 @@ print(X.head()) # Display the first few samples of the feature set to verify the
 numeric_features = ["release_year","genre_count","duration_number"]
 categorical_features = ["rating", "duration_type" ]
 
+#Numerical pipeline
+numeric_pipeline = Pipeline([
+    ("imputer", SimpleImputer(strategy="median")) # Impute missing values in numerical features using the median strategy to handle any potential missing data.
+])
+
+#categorical pipeline
+categorical_pipeline = Pipeline([
+    ("imputer", SimpleImputer(strategy="most_frequent")), # Impute missing values in categorical features using the most frequent strategy to handle any potential missing data.
+    ("encoder", OneHotEncoder(handle_unknown="ignore")) # Encode categorical features using One-Hot Encoding to convert them into a format suitable for machine learning models.
+])
+
+#combine pipelines into a preprocessor
 #create the preprocessor pipeline
 preprocessor = ColumnTransformer( transformers=[
-    ("cat", OneHotEncoder(handle_unknown="ignore"), categorical_features),
-    ("num", "passthrough", numeric_features)
+    ("cat", categorical_pipeline, categorical_features),
+    ("num", numeric_pipeline, numeric_features)
 ]
 )
 
@@ -88,3 +104,11 @@ X_test_processed = preprocessor.transform(X_test) # Apply the same preprocessor 
 
 print("\nEncoded feature matrix shape:", X_train_processed.shape)
 print("\nEncoded test feature matrix shape:", X_test_processed.shape)
+
+#Model Training
+#Initiate model
+model = LogisticRegression(max_iter=1000) # Initialize the Logistic Regression model with a maximum
+
+#Train the model
+model.fit(X_train_processed, y_train) # Train the Logistic Regression model using the processed training features and the target variable.
+print("\nModel training completed.")
