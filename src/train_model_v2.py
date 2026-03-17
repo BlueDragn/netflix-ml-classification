@@ -25,3 +25,24 @@ print(df.describe(include = "all")) # Get summaries of all columns, including ca
 #Data quality checks
 print(df.isnull().sum()) # Check for missing values in each column to identify if any data cleaning is needed before feature engineering.
 print("Duplicate rows: ", df.duplicated().sum()) # Check for duplicate rows in the dataset to ensure data quality before proceeding with feature engineering.
+
+
+# ===================================
+# Feature Engineering
+# ===================================
+
+# Duration -> duration_number + duration_type
+# Example: "90 min" -> duration_number: 90, duration_type: "min"
+# Example: "1 Season" -> duration_number: 1, duration_type: "Season
+
+df["duration_number"] = df["duration"].str.extract(r"(\d+)") # Extract the numeric part of the duration and convert it to an integer.
+df["duration_number"] = df["duration_number"].astype(float) # Convert the extracted numeric part to a float data type for numerical analysis.
+df["duration_type"] = df["duration"].str.replace(r"\d+", "", regex=True).str.strip() # Extract the non-numeric part of the duration and remove any leading/trailing whitespace.
+
+# listed_in -> listed_in_genres (list of genres)
+# Example: "Action, Comedy" -> listed_in_genres: ["Action", "Comedy"]
+df["genre_count"] = df["listed_in"].apply(lambda x: len(x.split(", "))) # Count the number of genres listed in the "listed_in" column to create a new feature representing genre diversity.
+
+#Verify new features
+print("\nFeature Engineering Checks:")
+print(df[["duration", "duration_number", "duration_type", "genre_count"]].head())
