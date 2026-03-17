@@ -117,3 +117,103 @@ Preprocessing should happen after splitting the data using a pipeline, otherwise
 
 **Next Step**  
 Implement the preprocessing pipeline in V2 and run the full pipeline (train → predict → evaluate).
+
+## 📅 Date: March 17
+
+## 🎯 Objective
+Improve V1 model by building a correct ML preprocessing pipeline and fixing training issues.
+
+---
+
+## ✅ Work Completed
+
+### 1. Feature Engineering (V2 Foundation)
+- Created new features:
+  - `duration_number` → numeric value from duration
+  - `duration_type` → unit (min / Season)
+  - `genre_count` → number of genres
+- Verified new features using sample outputs
+
+---
+
+### 2. Identified Problem During Model Training
+- Error: `ValueError: Input X contains NaN`
+- Root cause:
+  - Missing values were not handled
+  - LogisticRegression cannot accept NaN
+
+---
+
+### 3. Built Proper Preprocessing Pipeline
+- Separated features:
+  - Numerical → `release_year`, `genre_count`, `duration_number`
+  - Categorical → `rating`, `duration_type`
+
+- Created pipelines:
+  - Numerical pipeline:
+    - Median imputation
+  - Categorical pipeline:
+    - Most frequent imputation
+    - One-hot encoding
+
+- Combined using `ColumnTransformer`
+
+---
+
+### 4. Fixed Data Leakage Issue (Major Improvement)
+- Changed pipeline order:
+
+❌ Old (V1):
+- fit_transform on full dataset → then split
+
+✅ New (V2):
+- split → fit on train → transform train & test
+
+---
+
+### 5. Model Training (Working Pipeline)
+- Used LogisticRegression
+- Successfully trained model using processed data
+- No NaN errors
+
+---
+
+### 6. Model Evaluation Added
+- Metrics implemented:
+  - Accuracy
+  - Confusion Matrix
+  - Classification Report
+
+---
+
+### 7. Key Observation (Critical Insight)
+- Achieved **100% accuracy**
+- Confusion matrix shows zero errors
+
+📌 Interpretation:
+- Model is using `duration` as a perfect separator:
+  - Movies → minutes
+  - TV Shows → seasons
+
+⚠️ This indicates:
+- Feature dominance / shortcut learning
+- Not true generalization
+
+---
+
+## 🧠 Key Learnings
+
+- Importance of handling missing values (imputation)
+- Difference between `fit`, `transform`, and `fit_transform`
+- Why preprocessing must be done after train/test split
+- How data leakage happens and how to prevent it
+- How a feature can dominate model behavior
+- Why perfect accuracy can be misleading
+
+---
+
+## 🚀 Next Step
+
+- Run Experiment 1:
+  - Train model **without duration features**
+  - Compare performance with and without duration
