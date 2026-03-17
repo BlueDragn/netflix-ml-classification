@@ -78,4 +78,42 @@ Restructured the projects:
 - Supervised learning, classification, target variable definition, feature selection vs feature engineering, dataset shortcuts, train/test split, generalization, and overfitting.
 
 **Next Step**  
-- Start development of `train_model_v2.py` and implement feature engineering (`duration_number`, `duration_type`, `genre_count`). Plan Experiment 1 to compare model performance with and without the duration feature.
+- Start development of `train_model_v2.py` and implement feature engineering (`duration_number`, `duration_type`, `genre_count`).  
+Plan Experiment 1 to compare model performance with and without the duration feature.
+
+---
+
+## 2026-03-16
+
+**Topic**  
+Feature Engineering and Pipeline Understanding
+
+**What I did**  
+**These were done using paper and pencil.**
+
+Added feature engineering in V2:
+- Created `duration_number` and `duration_type` from `duration`
+- Created `genre_count` from `listed_in`
+
+Understood how pandas functions work (`.str`, `apply`, `lambda`).
+
+Compared V1 and V2 pipelines to see the difference between raw features and engineered features.
+
+Reviewed and corrected the ML workflow.
+
+
+
+**Why**  
+To better understand how data is transformed before training the model and to make sure the pipeline is correct.
+
+**Observation**  
+Raw text features can be converted into simple numeric features which are easier for the model to learn from.
+
+**Concepts Discussed**  
+Feature engineering, feature selection, encoding, pandas basics, preprocessing pipeline, train/test split, and data leakage.
+
+**Insight**  
+Preprocessing should happen after splitting the data using a pipeline, otherwise it can cause data leakage.
+
+**Next Step**  
+Implement the preprocessing pipeline in V2 and run the full pipeline (train → predict → evaluate).
