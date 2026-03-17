@@ -8,6 +8,7 @@ Focus: improving model input representation
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.model_selection import train_test_split
 
 # Step 2: Load the dataset
 df = pd.read_csv("data/processes/cleaned_data.csv")
@@ -76,6 +77,14 @@ preprocessor = ColumnTransformer( transformers=[
 ]
 )
 
-#Apply encoding to features
-X_processed = preprocessor.fit_transform(X)
-print("\nEncoded feature matrix shape:", X_processed.shape) # Check the shape of the encoded feature matrix to ensure that the preprocessing step has been applied correctly and to understand the dimensionality of the input for model training.
+#Train/Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) # Split the dataset into training and testing sets to evaluate the model's performance on unseen data.
+preprocessor.fit(X_train) # Fit the preprocessor on the training data to learn the necessary transformations for both categorical and numerical features.
+
+#Transform features using fitted preprocessing pipeline
+X_train_processed = preprocessor.transform(X_train) # Apply the fitted preprocessor to the training features to create the processed feature matrix for model training.
+X_test_processed = preprocessor.transform(X_test) # Apply the same preprocessor to the testing features to ensure that the test data is transformed in the same way as the training data for accurate
+
+
+print("\nEncoded feature matrix shape:", X_train_processed.shape)
+print("\nEncoded test feature matrix shape:", X_test_processed.shape)
