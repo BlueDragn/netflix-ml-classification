@@ -46,3 +46,13 @@ df["genre_count"] = df["listed_in"].apply(lambda x: len(x.split(", "))) # Count 
 #Verify new features
 print("\nFeature Engineering Checks:")
 print(df[["duration", "duration_number", "duration_type", "genre_count"]].head())
+
+
+#Define target variable and features
+y = df["type"] # Define the target variable 'y' as the 'type'
+X = df[["release_year", "rating", "duration_number", "duration_type", "genre_count"]] # Define the feature set 'X' with the original and newly engineered features.
+
+print("\nTarget (y) sample:")
+print(y.head()) # Display the first few samples of the target variable to verify its correctness.
+print("\nFeatures (X) sample:")
+print(X.head()) # Display the first few samples of the feature set to verify the new features
