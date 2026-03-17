@@ -12,6 +12,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 
 
 # Step 2: Load the dataset
@@ -112,3 +113,17 @@ model = LogisticRegression(max_iter=1000) # Initialize the Logistic Regression m
 #Train the model
 model.fit(X_train_processed, y_train) # Train the Logistic Regression model using the processed training features and the target variable.
 print("\nModel training completed.")
+
+#prediction and evaluation
+y_pred = model.predict(X_test_processed) # Use the trained model to make predictions on the processed test features to evaluate its performance on unseen data.
+
+print("\nModel Evaluation:" )
+
+#Accuracy
+print("Accuracy:", accuracy_score(y_test, y_pred)) # Calculate and print the accuracy of the model by comparing the true labels with the predicted labels.
+
+#Confusing Matrix
+print("\nConfusing Matrix:\n", confusion_matrix(y_test, y_pred)) # Generate and print the confusion matrix to visualize the performance of the classification model in terms of true positives, true negatives, false positives, and false negatives.
+
+#Classification Report
+print("\nClassification Report:\n", classification_report(y_test, y_pred)) # Generate and print a classification report that includes precision, recall, f1-score, and support for each class to provide a detailed evaluation of the model's performance.  
