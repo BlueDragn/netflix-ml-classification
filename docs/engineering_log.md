@@ -118,7 +118,7 @@ Preprocessing should happen after splitting the data using a pipeline, otherwise
 **Next Step**  
 Implement the preprocessing pipeline in V2 and run the full pipeline (train → predict → evaluate).
 
-## 📅 Date: March 17
+## Date: March 17
 
 ## 🎯 Objective
 Improve V1 model by building a correct ML preprocessing pipeline and fixing training issues.

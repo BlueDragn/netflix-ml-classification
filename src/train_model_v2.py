@@ -57,8 +57,8 @@ print(df[["duration", "duration_number", "duration_type", "genre_count"]].head()
 
 
 #Define target variable and features
-y = df["type"] # Define the target variable 'y' as the 'type'
-X = df[["release_year", "rating", "duration_number", "duration_type", "genre_count"]] # Define the feature set 'X' with the original and newly engineered features.
+y = df["type"] # Define the target variable 'y' as the 'release_year'
+X = df[[ "release_year","genre_count","rating","duration_number","duration_type"]] # Define the feature set 'X' with the original and newly engineered features.
 
 print("\nTarget (y) sample:")
 print(y.head()) # Display the first few samples of the target variable to verify its correctness.
@@ -72,25 +72,25 @@ print(X.head()) # Display the first few samples of the feature set to verify the
 
 #feature preparation
 #Identify categorical and numerical columns
-numeric_features = ["release_year","genre_count","duration_number"]
-categorical_features = ["rating", "duration_type" ]
+numeric_features = ["release_year","genre_count","duration_number"] # Define the list of numerical features to be processed in the pipeline.
+categorical_features = ["duration_type","rating"] # Define the list of categorical features to be processed in the pipeline.
 
 #Numerical pipeline
 numeric_pipeline = Pipeline([
     ("imputer", SimpleImputer(strategy="median")) # Impute missing values in numerical features using the median strategy to handle any potential missing data.
 ])
 
-#categorical pipeline
+#Categorical pipeline
 categorical_pipeline = Pipeline([
     ("imputer", SimpleImputer(strategy="most_frequent")), # Impute missing values in categorical features using the most frequent strategy to handle any potential missing data.
-    ("encoder", OneHotEncoder(handle_unknown="ignore")) # Encode categorical features using One-Hot Encoding to convert them into a format suitable for machine learning models.
+    ("encoder", OneHotEncoder(handle_unknown="ignore")) # Encode categorical features using One-Hot Encoding to convert them into a format suitable for machine learning models, while ignoring any unknown categories during transformation.
 ])
 
 #combine pipelines into a preprocessor
 #create the preprocessor pipeline
 preprocessor = ColumnTransformer( transformers=[
-    ("cat", categorical_pipeline, categorical_features),
-    ("num", numeric_pipeline, numeric_features)
+("cat", categorical_pipeline, categorical_features), # Apply the categorical pipeline to the specified categorical features.
+    ("num",numeric_pipeline, numeric_features)
 ]
 )
 
@@ -108,7 +108,7 @@ print("\nEncoded test feature matrix shape:", X_test_processed.shape)
 
 #Model Training
 #Initiate model
-model = LogisticRegression(max_iter=1000) # Initialize the Logistic Regression model with a maximum
+model = LogisticRegression(max_iter=1000, class_weight="balanced") # Initialize the Logistic Regression model with a maximum
 
 #Train the model
 model.fit(X_train_processed, y_train) # Train the Logistic Regression model using the processed training features and the target variable.
@@ -126,4 +126,4 @@ print("Accuracy:", accuracy_score(y_test, y_pred)) # Calculate and print the acc
 print("\nConfusing Matrix:\n", confusion_matrix(y_test, y_pred)) # Generate and print the confusion matrix to visualize the performance of the classification model in terms of true positives, true negatives, false positives, and false negatives.
 
 #Classification Report
-print("\nClassification Report:\n", classification_report(y_test, y_pred)) # Generate and print a classification report that includes precision, recall, f1-score, and support for each class to provide a detailed evaluation of the model's performance.  
+print("\nClassification Report:\n", classification_report(y_test, y_pred)) # Generate and print a classification report that includes precision, recall, f1-score, and support for each class to provide a detailed evaluation of the model's performance.

@@ -49,6 +49,7 @@ preprocessor = ColumnTransformer( transformers=[
     ("num", "passthrough", numeric_features)
 ]
 )
+
 #Apply encoding to features
 X_processed = preprocessor.fit_transform(X)
 print("\nEncoded feature matrix shape:", X_processed.shape)
