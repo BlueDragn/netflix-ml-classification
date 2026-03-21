@@ -1,3 +1,38 @@
+'''
+=======================
+Experiment Name:
+Remove duration_type to evaluate categorical feature importance
+
+Changes:
+Remove 'duration_type' from feature set
+
+Why:
+To test whether the model relies heavily on 'duration_type' as strong categorical signal for distinguishing between movies and TV shows.
+This will help us understand the importance of this feature in our model.
+
+Expected Outcome:
+- Accuracy may drop slightly or remain high if duration_number already captures most of the signal for distinguishing between movies and TV shows.
+- If duration_type is critical, confusion between Movies and TV Shows may increase, leading to more misclassifications.
+
+Expected Confusion Matrix Changes:
+- Increase in misclassifications between Movies and TV Shows.
+- Specially, more Movies predicted as TV Shows and vice versa, due to loss of categorical signal from duration_type.
+
+
+Metrics:
+- Accuracy (For overall comparison)
+- Confusion Matrix (Primary analysis)
+- Classification Report (precision/recall changes for Movies and TV Shows)
+
+=================
+'''
+
+
+
+
+
+
+
 # =======================
 # 1. Import necessary libraries
 # =======================
@@ -30,19 +65,15 @@ print(df.columns)
 df.info()
 #df.isnull().sum()
 
-
-
-
-
 # =======================
 # 5. Local feature engineering
 # =======================
 
 # duration column
 df["duration_number"] = df["duration"].str.extract(r"(\d+)").astype(float)
-df["duration_type"] = df["duration"].str.replace(r"(\d+)", "").str.strip()
 
-df[["duration", "duration_number", "duration_type"]].head()
+
+df[["duration", "duration_number"]].head()
 
 # listed_in column
 df["genre_count"] = df["listed_in"].apply(lambda x: len(x.split(", ")))
@@ -53,7 +84,7 @@ df[["listed_in", "genre_count"]].head()
 # =======================
 # 4. Define X and y
 # =======================
-X = df[["release_year", "rating", "duration_type", "duration_number", "genre_count"]]
+X = df[["release_year", "rating", "duration_number", "genre_count"]]
 y = df["type"]
 
 # =======================
@@ -70,7 +101,7 @@ print("Test labels shape:", y_test.shape)
 # 8. Define preprocessing pipeline (imputation, encoding)
 # =======================
 numeric_features = ["release_year", "duration_number", "genre_count"]
-categorical_features = ["rating", "duration_type"]
+categorical_features = ["rating"]
 
 num_pipeline = Pipeline(steps=[
     ("imputer", SimpleImputer(strategy="median")),

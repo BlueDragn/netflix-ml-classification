@@ -217,3 +217,30 @@ Improve V1 model by building a correct ML preprocessing pipeline and fixing trai
 - Run Experiment 1:
   - Train model **without duration features**
   - Compare performance with and without duration
+
+
+----
+-----
+
+
+
+
+
+
+
+  ## Experiment 1: Remove duration_log
+
+  **Changes**  
+  Remove 'duration_type' from feature set.
+
+  **Result:**
+  No changes in accuracy(0.9994)  
+  Confusing matrix [[1213,1],
+                    [0,548]]
+
+  **Insight:**  
+  duration_type is redundant; **duration_number** alone provides sufficient signal for **classification**.  
+  Model does not rely on **duration_type**
+
+
+
