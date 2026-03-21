@@ -57,7 +57,7 @@ X = df[["release_year", "rating", "duration_type", "duration_number", "genre_cou
 y = df["type"]
 
 # =======================
-# 6. Train/Test Split
+# 6. Train/Test Split (80/20)
 # =======================
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 print("\nTraining set shape:", X_train.shape)
