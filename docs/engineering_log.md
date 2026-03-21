@@ -239,8 +239,20 @@ Improve V1 model by building a correct ML preprocessing pipeline and fixing trai
                     [0,548]]
 
   **Insight:**  
-  duration_type is redundant; **duration_number** alone provides sufficient signal for **classification**.  
+  duration_type is redundant; **duration_number** alone provides sufficient signal for **classification**.
   Model does not rely on **duration_type**
 
 
+
+## Experiment 2: Only Duration Features
+
+**Changes:**
+Used only ['duration_number', 'duration_type'] as input features.
+
+**Result:**
+Achieved perfect accuracy (1.0) with zero misclassification:  
+[[1214,0],  
+   [0,548]]
+**Insight**
+Duration features alone are sufficient to completely solve the classification problem.This indicates that the dataset is highly separable based on duration_number, making the problem trivial.Other features so not contribute meaningful additional information.
 
