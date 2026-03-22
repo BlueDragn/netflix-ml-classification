@@ -149,3 +149,53 @@ X_test.loc[X_test.index[1], "rating"] = 999
 - Numeric pipeline fails when non-numeric values are introduced  
 - Categorical pipeline handled unexpected value safely  
 - System requires input validation before preprocessing 
+
+
+---
+
+
+
+## Failure Test 4: Extreme Values / Outliers
+
+### Objective
+Test how the pipeline behaves when extreme numerical values (outliers) are introduced into the input data.
+
+---
+
+### Method
+Injected extreme values into the numeric feature `release_year` in the test set after train-test split:
+
+- Set one value far in the future (3000)
+- Set one value far in the past (1800)
+
+```
+
+X_test.loc[X_test.index[0], "release_year"] = 3000  
+X_test.loc[X_test.index[1], "release_year"] = 1800  
+```
+---
+
+### Result
+
+✔ Pipeline executed successfully (no crash)
+
+Accuracy: ~0.559  
+
+Confusion Matrix:
+[[473 741]  
+ [ 36 512]]
+
+Classification behavior remained similar to previous runs
+
+---
+
+### Conclusion
+
+- Pipeline is numerically stable under extreme values  
+- StandardScaler handled out-of-range values without failure  
+- Model predictions were not significantly affected by small number of outliers  
+- However, extreme values do not improve model performance and may introduce instability if frequent  
+
+This shows the system is stable but not necessarily robust to unrealistic data distributions 
+
+---
