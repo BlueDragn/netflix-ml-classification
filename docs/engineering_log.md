@@ -304,15 +304,79 @@ Applying class weights significantly improved recall for the minority class (TV 
 The model shifted from being biased towards Movies to making more balanced predictions across classes, demonstrating the trade-off between overall accuracy and class-wise fairness.
 
 
-## Experiment 6A
+## Experiment 6A : Remove release_year
 
 **Changes**  
 Removed 'release_year' from feature set
 
-**Result**
+**Result**  
 Accuracy decreased to ~0.562:  
 [[505, 709],  
 [63, 485]]
 
 **Insight**  
 Removing release_year caused a noticeable drop in performance, indicating that although it is a weak feature, it still contributes useful signal. In the absence of strong features (like duration), even weak features help stabilize model predictions.
+
+## Experiment 6B : Remove genre_count
+
+**Changes**  
+Removed 'genre_count' from feature set
+
+**Result:**  
+Accuracy decreased to ~0.558:  
+[[472, 742],  
+  [36, 512]]
+
+**Insight:**  
+Removing genre_count caused a slight drop in performance, indicating it contributes weak but useful signal.Similar to release_year, it helps stabilize predictions when strong features are absent. Rating remains the most influential features among the remaining features.
+
+
+----
+
+## Experiment Summary: Feature Importance & Model Behavior Analysis
+
+A series of controlled experiments were conducted to understand feature importance, model behavior, and dataset characteristics.
+
+### Key Findings:
+
+1. **Dominant Features (Duration)**
+   - Using only duration features (`duration_number`, `duration_type`) resulted in near-perfect accuracy (~1.0).
+   - These features alone were sufficient to completely separate the classes.
+   - This indicates that the dataset is trivially separable due to strong duration-based signals.
+
+2. **Redundant Feature Behavior**
+   - Removing `duration_type` had negligible impact.
+   - Removing `duration_number` caused only a minor drop in performance.
+   - Both features encode similar information, making them partially redundant.
+
+3. **True Dataset Difficulty**
+   - Removing all duration features caused accuracy to drop significantly (~0.70).
+   - The model became biased toward the majority class (Movie), with very poor recall for TV Shows.
+   - This revealed that the problem is not inherently easy; it only appears easy due to dominant features.
+
+4. **Class Imbalance Impact**
+   - Applying `class_weight='balanced'` improved recall for the minority class (TV Show) from ~0.11 to ~0.87.
+   - However, this reduced performance on the majority class and overall accuracy.
+   - Demonstrates the trade-off between accuracy and class-wise fairness.
+
+5. **Weak Feature Analysis**
+   - Removing `release_year` and `genre_count` caused small but consistent drops in performance.
+   - These features provide weak but useful signals that help stabilize predictions.
+   - `rating` emerged as the most influential feature among the remaining features.
+
+---
+
+### Final Feature Hierarchy:
+
+- **Strong:** `duration_number`, `duration_type`
+- **Moderate:** `rating`
+- **Weak but useful:** `genre_count`, `release_year`
+
+---
+
+### Final Insight:
+
+The model's high performance is primarily driven by dominant duration-based features. When these are removed, the model struggles and becomes biased due to weak remaining signals. This highlights the importance of understanding feature influence and avoiding misleading conclusions from inflated accuracy.
+
+
+----
