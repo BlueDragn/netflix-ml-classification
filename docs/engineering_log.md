@@ -228,7 +228,7 @@ Improve V1 model by building a correct ML preprocessing pipeline and fixing trai
 
 
 
-  ## Experiment 1: Remove duration_log
+  ## Experiment 1: Remove duration_type
 
   **Changes**  
   Remove 'duration_type' from feature set.
@@ -273,3 +273,19 @@ Accuracy dropped slightly to ~0.9966 with 6 misclassifications:
 Although **duration_number** is a dominant feature, **duration_type** alone still provides strong separability between Movie and TV Show.  
 The classification problem remains
 nearly trivial even without numeric duration, indicating that duration-related features collectively dominate the dataset.
+
+## Experiment 4: Remove all duration features
+
+**Changes**  
+Remove both 'duration_number' and 'duration_type'
+
+**Result:**  
+Accuracy dropped significantly to ~0.699 with heavy miscalculation:  
+[[1169, 45],  
+  [485,63]]
+
+**Insight**  
+Without duration features. the model struggles to distinguish between classes.
+It becomes heavily biased toward predicting the majority class (Movie),resulting in very poor TV Shows (0.11).This reveals that duration features were critical for separability,and other features provide weak predictive signal.
+
+
