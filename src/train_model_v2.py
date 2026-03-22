@@ -1,22 +1,24 @@
 '''
 =======================
 Experiment Name:
-Only Duration Features
-Use only duration features ['duration_number', 'duration_type'] as input features, remove all other features.
-
+Remove duration_number to evaluate dependency on dominant numeric feature
 
 Changes:
-Remove rest of the features from feature set.
+Remove 'duration_number' from the feature set, keep all other features including 'duration_type'.
 
 Why:
-To test whether duration features alone are sufficient to predict the type (Movie vs TV Show) or not,
-and to confirm if duration_number is the dominant feature in the model performance.
+To test how much the model depends on the 'duration_number' for classification and to evaluate how well the model performs using features alone.
+
 
 Expected outcomes:
-- Accuracy will remain very high (close to baseline )
-- Model performance will not degrade significantly.
+- Significant drop in accuracy if 'duration_number' is a dominant feature.
+- Model struggles to clearly distinguish between Movies and TV Shows.
+- Performance will rely on weaker signals like rating, genre_count, release_year, and duration_type, which may not be as predictive.
 
-
+Expected Confusion Matrix Changes:
+- Increase in misclassifications.
+- Model Movies predicted as TV Shows and vice versa.
+- Loss of clear separation between the two classes.
 
 Metrics:
 - Accuracy (For overall comparison)
@@ -84,7 +86,7 @@ df[["listed_in", "genre_count"]].head()
 # =======================
 # 4. Define X and y
 # =======================
-X = df[["duration_number", "duration_type"]]
+X = df[["duration_type", "rating", "genre_count", "release_year"]]
 y = df["type"]
 
 # =======================
@@ -100,8 +102,8 @@ print("Test labels shape:", y_test.shape)
 # =======================
 # 8. Define preprocessing pipeline (imputation, encoding)
 # =======================
-numeric_features = ["duration_number"]
-categorical_features = ["duration_type"]
+numeric_features = [ "genre_count", "release_year"]
+categorical_features = ["duration_type", "rating"]
 
 num_pipeline = Pipeline(steps=[
     ("imputer", SimpleImputer(strategy="median")),

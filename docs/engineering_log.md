@@ -253,6 +253,23 @@ Used only ['duration_number', 'duration_type'] as input features.
 Achieved perfect accuracy (1.0) with zero misclassification:  
 [[1214,0],  
    [0,548]]
-**Insight**
+
+
+**Insight**  
 Duration features alone are sufficient to completely solve the classification problem.This indicates that the dataset is highly separable based on duration_number, making the problem trivial.Other features so not contribute meaningful additional information.
 
+
+## Experiment 3: Remove duration_number
+
+**Changes**
+Removed 'duration_number' while keeping other features
+
+**Result:**
+Accuracy dropped slightly to ~0.9966 with 6 misclassifications:  
+ [[1214, 0],  
+ [6, 542]]
+
+**Insight**  
+Although **duration_number** is a dominant feature, **duration_type** alone still provides strong separability between Movie and TV Show.  
+The classification problem remains
+nearly trivial even without numeric duration, indicating that duration-related features collectively dominate the dataset.
