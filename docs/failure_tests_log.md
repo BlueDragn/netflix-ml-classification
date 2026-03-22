@@ -199,3 +199,40 @@ Classification behavior remained similar to previous runs
 This shows the system is stable but not necessarily robust to unrealistic data distributions 
 
 ---
+
+## Failure Test 5: Schema Mismatch (Missing Column)
+
+### Objective
+Test how the pipeline behaves when a required feature column is missing from the input data.
+
+---
+
+### Method
+Removed a required feature (`release_year`) from the test set after train-test split.
+
+```
+
+X_test = X_test.drop(columns=["release_year"])
+
+```
+---
+
+### Result
+
+❌ Pipeline failed during preprocessing  
+
+Error:  
+ValueError: columns are missing: {'release_year'}
+
+---
+
+### Conclusion
+
+- Pipeline is tightly coupled to input schema  
+- ColumnTransformer requires exact feature names used during training  
+- Missing columns lead to immediate failure  
+- System lacks schema validation and fallback handling  
+
+This highlights a critical production risk where any upstream data change can break the entire pipeline.
+
+---
