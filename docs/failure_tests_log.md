@@ -236,3 +236,100 @@ ValueError: columns are missing: {'release_year'}
 This highlights a critical production risk where any upstream data change can break the entire pipeline.
 
 ---
+
+
+## Failure Testing Summary
+
+### Overview
+A series of failure tests were conducted to evaluate the robustness and reliability of the ML pipeline under non-ideal and real-world conditions.
+
+---
+
+### Key Findings
+
+1. **Missing Values**
+- Pipeline handled missing data correctly using SimpleImputer  
+- No failure observed  
+
+2. **Unseen Categories**
+- OneHotEncoder with `handle_unknown="ignore"` handled new categories safely  
+- No failure observed  
+
+3. **Invalid Data Types**
+- Pipeline failed when non-numeric values were introduced into numeric features  
+- Revealed lack of type validation  
+
+4. **Extreme Values / Outliers**
+- Pipeline remained stable under extreme numeric inputs  
+- No crash, but no improvement in predictions  
+
+5. **Schema Mismatch (Missing Column)**
+- Pipeline failed when required column was missing  
+- Revealed tight coupling to input schema  
+
+---
+
+### Overall Conclusion
+
+- The pipeline is **functionally correct but not production-ready**  
+- It handles expected variations (missing values, unseen categories)  
+- It fails under structural and data integrity issues (type errors, schema mismatch)  
+
+---
+
+### Key Risks Identified
+
+- No input validation layer  
+- No schema enforcement mechanism  
+- Assumes clean and consistent input data  
+- Vulnerable to upstream data changes  
+
+---
+
+### Recommendations
+
+To make the system production-ready:
+
+- Add input schema validation before preprocessing  
+- Enforce data types for each feature  
+- Introduce safeguards for missing or unexpected columns  
+- Log and handle invalid inputs gracefully instead of crashing  
+
+---
+
+### Additional Tests That Can Be Performed
+
+1. **Extra Column Injection**
+- Add unexpected column to input  
+- Test whether pipeline ignores or fails  
+
+2. **Column Order Change**
+- Shuffle column order  
+- Validate whether pipeline remains stable  
+
+3. **All Values Missing**
+- Entire column filled with NaN  
+- Test imputer robustness  
+
+4. **Data Distribution Shift**
+- Provide inputs very different from training distribution  
+- Observe prediction reliability  
+
+5. **Duplicate / Constant Values**
+- All rows having same value  
+- Check model behavior  
+
+6. **High Cardinality Category Injection**
+- Introduce many unseen categories  
+- Evaluate encoding stability  
+
+---
+
+### Final Insight
+
+This phase demonstrates that:
+
+The ML model alone is not sufficient —  
+A reliable system requires validation, robustness, and failure handling layers.
+
+Failure testing is essential to bridge the gap between a working model and a production-ready system.
