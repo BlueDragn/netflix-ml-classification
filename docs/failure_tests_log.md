@@ -68,3 +68,84 @@ We injected missing values into the test dataset after the train-test split to s
 
 ---
 
+## Failure Test 2: Unseen Category Handling
+
+### Objective
+Test whether the model can handle unseen categorical values in input data without failure.
+
+---
+
+### Method
+
+Injected an unseen category into the test dataset after train-test split:
+
+    # Inject unseen category into test set
+    X_test.loc[X_test.index[0], "rating"] = "NC-17"
+
+(Note: "NC-17" is assumed not present in training data)
+
+---
+
+### Result
+
+- Model executed successfully (no crash)
+- No warnings observed
+- Accuracy ≈ **0.559**
+
+**Confusion Matrix:**
+
+    [[473 741]
+     [ 36 512]]
+
+- Performance remained consistent with baseline
+
+---
+
+### Conclusion
+
+- OneHotEncoder with `handle_unknown="ignore"` successfully handled unseen category
+- System remained stable and did not fail
+- Unseen category was ignored during encoding (no new feature created)
+- No significant impact on performance observed
+- Model predictions continue, but unseen categories provide no useful signal
+
+---
+
+
+## Failure Test 3: Invalid Data Type Injection
+
+### Objective
+Test how the pipeline behaves when incorrect data types are introduced into numeric and categorical features.
+
+---
+
+### Method
+Injected invalid values into the test set after train-test split:
+
+- Set `release_year` (numeric) to a string value
+- Set `rating` (categorical) to an out-of-range numeric value
+
+
+```
+X_test.loc[X_test.index[0], "release_year"] = "Two Thousand Twenty"  
+X_test.loc[X_test.index[1], "rating"] = 999  
+```
+
+---
+
+### Result
+
+-  Pipeline failed during preprocessing  
+
+- Error:  
+1. ValueError: Cannot use median strategy with non-numeric data  
+2. could not convert string to float: 'Two Thousand Twenty'  
+
+---
+
+### Conclusion
+
+- Pipeline is not robust to incorrect data types  
+- Numeric pipeline fails when non-numeric values are introduced  
+- Categorical pipeline handled unexpected value safely  
+- System requires input validation before preprocessing 
