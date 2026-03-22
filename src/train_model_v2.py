@@ -1,36 +1,36 @@
 '''
 =======================
 Experiment Name:
-Remove all duration features to evaluate true dataset difficulty.
+apply class_weight='balanced' to address class imbalance
 
 
 Changes:
-Remove 'duration_number' and 'duration_type' from the feature set, keep all other features.
-
-Remaining features:
+Modify LogisticRegression to include class_weight='balanced' while keeping features the same as Exp 4:
 ['rating', 'genre_count', 'release_year']
 
+
 Why:
-To test whether the model can still effectively distinguish between Movies and TV Shows without the duration features.
-Evaluate the true power of remaining features.
+To reduce model bias toward the majority class (Movie) and improve performance on the majority class (TV Show), especially recall.
 
 
 Expected outcomes:
-- Significant drop in accuracy.
-- Model struggles to separate classes clearly.
-- Increased misclassifications for both classes.
+- TV show recall will increase significantly
+- Movie recall may decrease slightly
+- Overall accuracy may decrease slightly
+- Model predictions will become more balanced between classes.
+
 
 Expected Confusion Matrix Changes:
-- More mixed predictions.
-- Both Movie -> TV and TV -> Movie errors increase.
-
+- Fewer TV shows misclassified as Movies
+- Increase in correct TV Show predictions
+- Slightly increase in Movie misclassification
 
 Metrics:
 - Accuracy (For overall comparison)
 - Confusion Matrix (Primary analysis)
 - Classification Report (precision/recall changes for Movies and TV Shows)
 
-=================
+====================
 '''
 
 
@@ -149,7 +149,7 @@ X_test_processed = preprocessor.transform(X_test)
 # =======================
 # 11. Train a model on X_train_processed (e.g., Logistic Regression)
 # =======================
-model = LogisticRegression(max_iter=1000)
+model = LogisticRegression(max_iter=1000, class_weight='balanced')
 model.fit(X_train_processed, y_train)
 print("\nModel training completed.")
 

@@ -289,3 +289,17 @@ Without duration features. the model struggles to distinguish between classes.
 It becomes heavily biased toward predicting the majority class (Movie),resulting in very poor TV Shows (0.11).This reveals that duration features were critical for separability,and other features provide weak predictive signal.
 
 
+## Experiment 5: Class Imbalance Handling
+
+**Change**  
+Applied class_weight='balanced' in LogisticRegression
+
+**Result:**  
+Accuracy decreased to ~0.608 with more balanced predictions:  
+[[594, 620],  
+[70, 478]]
+
+**Insight**  
+Applying class weights significantly improved recall for the minority class (TV Show) from 0.11 to 0.87, but at the cost of reduced performance on the majority class (Movie).  
+The model shifted from being biased towards Movies to making more balanced predictions across classes, demonstrating the trade-off between overall accuracy and class-wise fairness.
+
