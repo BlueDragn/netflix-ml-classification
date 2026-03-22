@@ -1,21 +1,29 @@
 '''
 =======================
 Experiment Name:
-Remove release_year to test its contribution
+apply class_weight='balanced' to address class imbalance
 
 
 Changes:
-Remove 'release_year' from feature set.
+Modify LogisticRegression to include class_weight='balanced' while keeping features the same as Exp 4:
+['rating', 'genre_count', 'release_year']
 
 
 Why:
-To test whether 'release_year' contributes meaningful signal to classification or acts as noise.
+To reduce model bias toward the majority class (Movie) and improve performance on the majority class (TV Show), especially recall.
 
 
 Expected outcomes:
-- Little to no change in accuracy
-- Minimal impact on confusion matrix
-- Model performance remains similar
+- TV show recall will increase significantly
+- Movie recall may decrease slightly
+- Overall accuracy may decrease slightly
+- Model predictions will become more balanced between classes.
+
+
+Expected Confusion Matrix Changes:
+- Fewer TV shows misclassified as Movies
+- Increase in correct TV Show predictions
+- Slightly increase in Movie misclassification
 
 
 Metrics:
@@ -23,7 +31,7 @@ Metrics:
 - Confusion Matrix (Primary analysis)
 - Classification Report (precision/recall changes for Movies and TV Shows)
 
-====================
+=================
 '''
 
 
@@ -84,7 +92,7 @@ df[["listed_in", "genre_count"]].head()
 # =======================
 # 4. Define X and y
 # =======================
-X = df[[ "rating", "genre_count"]]
+X = df[[ "rating", "genre_count", "release_year"]]
 y = df["type"]
 
 # =======================
@@ -100,7 +108,7 @@ print("Test labels shape:", y_test.shape)
 # =======================
 # 8. Define preprocessing pipeline (imputation, encoding)
 # =======================
-numeric_features = [ "genre_count"]
+numeric_features = [ "genre_count", "release_year"]
 categorical_features = [ "rating"]
 
 num_pipeline = Pipeline(steps=[
@@ -142,7 +150,7 @@ X_test_processed = preprocessor.transform(X_test)
 # =======================
 # 11. Train a model on X_train_processed (e.g., Logistic Regression)
 # =======================
-model = LogisticRegression(max_iter=1000, class_weight='balanced')
+model = LogisticRegression(max_iter=1000, class_weight="balanced")
 model.fit(X_train_processed, y_train)
 print("\nModel training completed.")
 
