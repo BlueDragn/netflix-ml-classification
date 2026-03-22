@@ -303,3 +303,16 @@ Accuracy decreased to ~0.608 with more balanced predictions:
 Applying class weights significantly improved recall for the minority class (TV Show) from 0.11 to 0.87, but at the cost of reduced performance on the majority class (Movie).  
 The model shifted from being biased towards Movies to making more balanced predictions across classes, demonstrating the trade-off between overall accuracy and class-wise fairness.
 
+
+## Experiment 6A
+
+**Changes**  
+Removed 'release_year' from feature set
+
+**Result**
+Accuracy decreased to ~0.562:  
+[[505, 709],  
+[63, 485]]
+
+**Insight**  
+Removing release_year caused a noticeable drop in performance, indicating that although it is a weak feature, it still contributes useful signal. In the absence of strong features (like duration), even weak features help stabilize model predictions.

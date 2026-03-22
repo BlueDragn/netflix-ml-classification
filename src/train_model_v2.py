@@ -1,29 +1,22 @@
 '''
 =======================
 Experiment Name:
-apply class_weight='balanced' to address class imbalance
+Remove release_year to test its contribution
 
 
 Changes:
-Modify LogisticRegression to include class_weight='balanced' while keeping features the same as Exp 4:
-['rating', 'genre_count', 'release_year']
+Remove 'release_year' from feature set.
 
 
 Why:
-To reduce model bias toward the majority class (Movie) and improve performance on the majority class (TV Show), especially recall.
+To test whether 'release_year' contributes meaningful signal to classification or acts as noise.
 
 
 Expected outcomes:
-- TV show recall will increase significantly
-- Movie recall may decrease slightly
-- Overall accuracy may decrease slightly
-- Model predictions will become more balanced between classes.
+- Little to no change in accuracy
+- Minimal impact on confusion matrix
+- Model performance remains similar
 
-
-Expected Confusion Matrix Changes:
-- Fewer TV shows misclassified as Movies
-- Increase in correct TV Show predictions
-- Slightly increase in Movie misclassification
 
 Metrics:
 - Accuracy (For overall comparison)
@@ -91,7 +84,7 @@ df[["listed_in", "genre_count"]].head()
 # =======================
 # 4. Define X and y
 # =======================
-X = df[[ "rating", "genre_count", "release_year"]]
+X = df[[ "rating", "genre_count"]]
 y = df["type"]
 
 # =======================
@@ -107,7 +100,7 @@ print("Test labels shape:", y_test.shape)
 # =======================
 # 8. Define preprocessing pipeline (imputation, encoding)
 # =======================
-numeric_features = [ "genre_count", "release_year"]
+numeric_features = [ "genre_count"]
 categorical_features = [ "rating"]
 
 num_pipeline = Pipeline(steps=[
