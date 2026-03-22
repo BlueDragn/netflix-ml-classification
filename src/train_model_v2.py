@@ -1,31 +1,29 @@
 '''
 =======================
 Experiment Name:
-apply class_weight='balanced' to address class imbalance
+Remove genre_count to evaluate its impact on model performance.
 
 
 Changes:
-Modify LogisticRegression to include class_weight='balanced' while keeping features the same as Exp 4:
-['rating', 'genre_count', 'release_year']
+- remove "genre_count" from feature set X
+
+Remaining Features:
+['rating', 'release_year']
 
 
 Why:
-To reduce model bias toward the majority class (Movie) and improve performance on the majority class (TV Show), especially recall.
-
+To determine whether genre_count provides meaningful predictive signal or acts as weak/noisy feature.
+This will help us understand the importance of genre diversity in distinguishing between Movies and TV Shows.
 
 Expected outcomes:
-- TV show recall will increase significantly
-- Movie recall may decrease slightly
-- Overall accuracy may decrease slightly
-- Model predictions will become more balanced between classes.
+- Small drop OR minimal change in performance metrics (accuracy, precision, recall) if genre_count is not a strong predictor.
+- Model behavior remains similar to EXP 5
+- Rating continue to drive most of the classification decisions.
 
 
 Expected Confusion Matrix Changes:
-- Fewer TV shows misclassified as Movies
-- Increase in correct TV Show predictions
-- Slightly increase in Movie misclassification
-
-
+- Slight increase in misclassification (if genre_count was providing some signal), but not a drastic change.
+- Otherwise, confusion matrix remains similar to EXP 5.
 Metrics:
 - Accuracy (For overall comparison)
 - Confusion Matrix (Primary analysis)
@@ -92,7 +90,7 @@ df[["listed_in", "genre_count"]].head()
 # =======================
 # 4. Define X and y
 # =======================
-X = df[[ "rating", "genre_count", "release_year"]]
+X = df[[ "rating","release_year"]]
 y = df["type"]
 
 # =======================
@@ -108,7 +106,7 @@ print("Test labels shape:", y_test.shape)
 # =======================
 # 8. Define preprocessing pipeline (imputation, encoding)
 # =======================
-numeric_features = [ "genre_count", "release_year"]
+numeric_features = [ "release_year"]
 categorical_features = [ "rating"]
 
 num_pipeline = Pipeline(steps=[
