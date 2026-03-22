@@ -1,33 +1,12 @@
 '''
 =======================
-Experiment Name:
-Remove genre_count to evaluate its impact on model performance.
+Failure Tests:
+1. Missing Values: Introduce NaN values in features and check if imputation works correctly.
+2. Incorrect Data Types: Change data types of features (e.g., make release_year a string) and see if the pipeline handles it.
+3. Unseen Categories: Add a new category to the rating feature in the test set and check if OneHotEncoder with handle_unknown="ignore" works without errors.
+4. Extreme values: Introduce outliers in release_year and see how it affects model performance.
+5. Missing columns: Remove required feature column from input.
 
-
-Changes:
-- remove "genre_count" from feature set X
-
-Remaining Features:
-['rating', 'release_year']
-
-
-Why:
-To determine whether genre_count provides meaningful predictive signal or acts as weak/noisy feature.
-This will help us understand the importance of genre diversity in distinguishing between Movies and TV Shows.
-
-Expected outcomes:
-- Small drop OR minimal change in performance metrics (accuracy, precision, recall) if genre_count is not a strong predictor.
-- Model behavior remains similar to EXP 5
-- Rating continue to drive most of the classification decisions.
-
-
-Expected Confusion Matrix Changes:
-- Slight increase in misclassification (if genre_count was providing some signal), but not a drastic change.
-- Otherwise, confusion matrix remains similar to EXP 5.
-Metrics:
-- Accuracy (For overall comparison)
-- Confusion Matrix (Primary analysis)
-- Classification Report (precision/recall changes for Movies and TV Shows)
 
 =================
 '''
@@ -93,10 +72,18 @@ df[["listed_in", "genre_count"]].head()
 X = df[[ "rating","release_year"]]
 y = df["type"]
 
+
+
 # =======================
 # 6. Train/Test Split (80/20)
 # =======================
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Drop a required feature from test set
+X_test = X_test.drop(columns=["release_year"])
+
+
+
 print("\nTraining set shape:", X_train.shape)
 print("Test set shape:", X_test.shape)
 print("Training labels shape:", y_train.shape)
@@ -161,5 +148,6 @@ print("\nModel Accuracy:", accuracy)
 print(confusion_matrix(y_test, y_pred))
 print("\nClassification Report:")
 print(classification_report(y_test, y_pred))
+
 
 
